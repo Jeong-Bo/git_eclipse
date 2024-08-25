@@ -13,11 +13,9 @@ import test.domain.RequestTestDTO;
 import test.domain.ResponseTestDTO;
 import test.service.TestService;
 
-// http:// server ip : port / context / greeting
-@WebServlet("/greeting")
-public class GreetingServlet extends HttpServlet {
-	
-	private TestService service ;
+@WebServlet("/index")
+public class TestController extends HttpServlet{
+private TestService service ;
 	
 	public void init() {
 		System.out.println("인스턴스 생성시 딱 한번 호출되는 콜백함수입니다.");
@@ -26,27 +24,33 @@ public class GreetingServlet extends HttpServlet {
 	public void destroy() {
 		System.out.println("메모리상에서 allocation 될 때 딱 한번 호출되는 콜백함수입니다.");
 	}
-	
+	////////////////////////////
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-	throws ServletException, IOException {
-		doPost(request,response);
-		
-		
+	throws ServletException, IOException {		
+		process(request, response);
 	}
-
-	
+	//////////////////////////////////////
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-	throws ServletException, IOException {
-		System.out.println("debug >>> request Post");
+			throws ServletException, IOException {	
+		process(request, response);
+	}
+	///////////////////////////////
+	protected void process(HttpServletRequest request, HttpServletResponse response) 
+	throws ServletException, IOException {		
+		
 		String uri = request.getRequestURI();
-		System.out.println("debug >>> clien path /greeting : " + uri );
+		System.out.println("debug >>> client path  : " + uri );
+		System.out.println("debug >>> client request method : " + request.getMethod());
+		
 		////////////
 		String id = request.getParameter("id");
 		String pwd = request.getParameter("pwd");
 		RequestTestDTO params = new RequestTestDTO();
 		params.setId(id); params.setPwd(pwd);
 		/////////////////////////////////////////////
+		
+		
 		ResponseTestDTO result = service.login(params);
 		if( result != null ) {
 			/////////// 데이터를 쉐어하기 위해서 세션 객체를 만들고 데이터를 심는다.
@@ -58,6 +62,6 @@ public class GreetingServlet extends HttpServlet {
 			session.setAttribute("errMsg", "입력데이터 확인 부탁드립니다.");
 			response.sendRedirect("error.jsp");
 		}
+	
 	}
-
 }

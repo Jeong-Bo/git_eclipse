@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	${ loginUser.name } 님 환영합니다 ...
 	OK.JSP
 </body>
 </html>
